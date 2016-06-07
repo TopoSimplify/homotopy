@@ -14,13 +14,22 @@ import (
 type Homotopy struct {
     pln        []*Point
     queue      *heap.Heap
-    relates    []Relations
+    relations  []Relations
     neighbours []Geometry
 }
 
 //homotopy
-func NewHomotopy(coords []*Point, queue *heap.Heap, relates []Relations, neighbours []Geometry) *Homotopy {
-    return &Homotopy{coords, queue, relates, neighbours}
+func NewHomotopy(coords []*Point, queue *heap.Heap, relations []Relations,
+neighbours []Geometry) *Homotopy {
+    return &Homotopy {coords, queue, relations, neighbours}
+}
+
+func (self *Homotopy) UpdateHomotopy(pnts []*Point, ints *heap.Heap,
+neighbours []Geometry) *Homotopy{
+    self.pln = pnts
+    self.queue = ints
+    self.neighbours = neighbours
+    return self
 }
 
 //find spatial fit
@@ -34,7 +43,7 @@ func (self *Homotopy) FindSpatialFit() *LineString {
     var pln = NewLineString(self.pln)
 
     var comparators = make([]Comparator, 0)
-    for _, rlt := range self.relates {
+    for _, rlt := range self.relations {
         comparators = append(comparators, rlt.Relate(pln, self.neighbours))
     }
 
@@ -42,10 +51,11 @@ func (self *Homotopy) FindSpatialFit() *LineString {
     var isvalid = self.isvalid(subpln, comparators)
 
     for !isvalid && self.queue.Size() > 0 {
-        nextint := self.queue.Pop().(*dp.Vertex).Index()
-        subpln = self.subgeom(vset.Add(item.Int(nextint)))
-        isvalid = self.isvalid(subpln, comparators)
+        nextint    := self.queue.Pop().(*dp.Vertex).Index()
+        subpln      = self.subgeom(vset.Add(item.Int(nextint)))
+        isvalid     = self.isvalid(subpln, comparators)
     }
+
     return subpln
 }
 
