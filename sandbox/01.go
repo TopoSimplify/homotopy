@@ -8,6 +8,7 @@ import (
     "simplex/dp"
     "simplex/struct/heap"
     . "simplex/homotopy"
+    . "simplex/interest"
 )
 
 var A = NewPointXY(2, -3)
@@ -37,10 +38,10 @@ func main() {
     var ln = NewLineString([]*Point{A, B, C, D, E, F, G, H})
     fmt.Println("Polyline: ", ln)
 
-
-
     hp := heap.NewHeap(heap.NewHeapType().AsMax())
     hp.Push(b); hp.Push(c); hp.Push(d); hp.Push(e); hp.Push(f); hp.Push(g);
+    var intfn = func() *heap.Heap{ return hp }
+    var intpool = NewIntCandidates([]IntFunctor{intfn})
 
     //grlt := NewGeometryRelate()
     //qrlt := NewQuadRelate()
@@ -48,11 +49,9 @@ func main() {
 
     relates := []Relations{drlt}
 
-    var topy = NewHomotopy(ln.Coordinates(), hp, relates, neighbours)
-    var poly = topy.FindSpatialFit()
-
-
-    fmt.Println(poly)
-
+    var pln = ln.Coordinates()
+    var topy = NewHomotopy(pln, intpool, relates, neighbours)
+    var ints = topy.FindSpatialFit(0, len(pln)-1)
+    fmt.Println(ints)
 }
 
