@@ -53,5 +53,10 @@ func main() {
     var topy = NewHomotopy(pln, intpool, relates, neighbours)
     var ints = topy.FindSpatialFit(0, len(pln)-1)
     fmt.Println(ints)
+
+    topy.UpdateHomotopy(pln, intpool, relates, neighbours)
+    ints = topy.FindSpatialFit(0, len(pln)-1)
+    fmt.Println(ints)
+
 }
 
