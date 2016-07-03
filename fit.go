@@ -31,12 +31,21 @@ func (self *Homotopy) FindSpatialFit(i, j int) *SSet {
     fmt.Println("vset geom  --|>", subpln.WKT())
     fmt.Println("bool state --|>", isvalid)
 
+    var fixint Item
+
     for self.intpool.HasNext() && !isvalid{
         var queue = self.intpool.Next()
 
         for !isvalid && !queue.IsEmpty() {
             idx:= queue.Pop().(*dp.Vertex).Index()
+            if fixint == nil {
+                fixint = idx
+            }
+
             vset.Add(idx)
+
+            self.DeflectionFilter(vset, idx, fixint)
+
             subpln = self.subgeom(vset)
             isvalid = self.isvalid(subpln, comparators)
 
