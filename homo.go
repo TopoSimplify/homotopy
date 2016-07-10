@@ -18,7 +18,12 @@ type Homotopy struct {
 //homotopy
 func NewHomotopy(coords []*Point, intpool *IntCandidates, relations []Relations,
 neighbours []Geometry) *Homotopy {
-    return &Homotopy{coords, intpool, relations, neighbours}
+    return &Homotopy{
+        pln        : coords,
+        intpool    : intpool,
+        relations  : relations,
+        neighbours : neighbours,
+    }
 }
 
 

@@ -1,13 +1,11 @@
 package homotopy
 
-
 import (
     "simplex/dp"
     . "simplex/struct/item"
     . "simplex/geom"
     . "simplex/relations"
     . "simplex/struct/sset"
-    "fmt"
 )
 
 //find spatial fit
@@ -27,17 +25,13 @@ func (self *Homotopy) FindSpatialFit(i, j int) *SSet {
     var subpln = self.subgeom(vset)
     var isvalid = self.isvalid(subpln, comparators)
 
-    fmt.Println("vset       --|>", vset.String())
-    fmt.Println("vset geom  --|>", subpln.WKT())
-    fmt.Println("bool state --|>", isvalid)
 
-    var fixint Item
+    for self.intpool.HasNext() && !isvalid {
+        var queue = self.intpool.Next().Clone()
 
-    for self.intpool.HasNext() && !isvalid{
-        var queue = self.intpool.Next()
-
+        var fixint Item
         for !isvalid && !queue.IsEmpty() {
-            idx:= queue.Pop().(*dp.Vertex).Index()
+            idx := queue.Pop().(*dp.Vertex).Index()
             if fixint == nil {
                 fixint = idx
             }
@@ -48,11 +42,6 @@ func (self *Homotopy) FindSpatialFit(i, j int) *SSet {
 
             subpln = self.subgeom(vset)
             isvalid = self.isvalid(subpln, comparators)
-
-            fmt.Println("vset       --|>", vset.String())
-            fmt.Println("vset geom  --|>", subpln.WKT())
-            fmt.Println("bool state --|>", isvalid)
-            fmt.Println(vset.PrintBaseStruct())
         }
     }
 
