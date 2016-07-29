@@ -25,7 +25,6 @@ func (self *Homotopy) FindSpatialFit(i, j int) *SSet {
     var subpln = self.subgeom(vset)
     var isvalid = self.isvalid(subpln, comparators)
 
-
     for self.intpool.HasNext() && !isvalid {
         var queue = self.intpool.Next().Clone()
 
@@ -35,12 +34,12 @@ func (self *Homotopy) FindSpatialFit(i, j int) *SSet {
             if fixint == nil {
                 fixint = idx
             }
-
             vset.Add(idx)
 
             self.DeflectionFilter(vset, idx, fixint)
 
             subpln = self.subgeom(vset)
+
             isvalid = self.isvalid(subpln, comparators)
         }
     }
