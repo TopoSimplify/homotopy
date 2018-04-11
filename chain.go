@@ -14,12 +14,17 @@ type Vertex struct {
 type Chain struct {
 	link *Vertex
 	size int
+	simple *geom.LineString
 }
 
 func NewChain(coordinates []*geom.Point) *Chain {
+	var n = len(coordinates)
 	var chain = &Chain{
-		size: len(coordinates),
+		size: n,
 		link: &Vertex{Point: coordinates[0]},
+		simple: geom.NewLineString([]*geom.Point{
+			coordinates[0], coordinates[n-1],
+		}),
 	}
 	var prev, next *Vertex
 	prev = chain.link

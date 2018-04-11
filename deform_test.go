@@ -438,6 +438,7 @@ func TestHomotopyDeformationCmplx2(t *testing.T) {
 
 	g.Describe("context neighbours", func() {
 		g.It("should test context neighbours", func() {
+			g.Timeout(1*time.Hour)
 			wkt := "LINESTRING ( 400 560, 520 660, 620 600, 720 640, 760 500, 680 460, 720 420, 780 400, 720 360, 580 340, 440 400, 380 440, 440 500, 400 560 )"
 			cgs := ctx.NewContexts(ctx.New(geom.NewLineStringFromWKT(wkt), -1, 0))
 

@@ -6,10 +6,20 @@ import (
 	"github.com/intdxdt/rtree"
 )
 
+//func printChain(chain *Chain) {
+//	var coords []*geom.Point
+//	var link = chain.link
+//	for link != nil {
+//		coords = append(coords, link.Point)
+//		link = link.next
+//	}
+//	fmt.Println(geom.NewLineString(coords).WKT())
+//}
+
+//deforms a polyline given coordinates and disjoint context neighbours
 func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries) *Chain {
 	var db = contextDB(contexts)
 	var chain = NewChain(coordinates)
-
 	var deformable = true
 
 	for deformable && chain.size > 2 {
@@ -47,9 +57,7 @@ func collapseVertex(v *Vertex, db *rtree.RTree) bool {
 	var bln = true
 	var a, b, c = va.Point, vb.Point, vc.Point
 
-	var box = a.BBox().ExpandIncludeXY(
-		b[geom.X], b[geom.Y],
-	).ExpandIncludeXY(
+	var box = a.BBox().ExpandIncludeXY(b[geom.X], b[geom.Y], ).ExpandIncludeXY(
 		c[geom.X], c[geom.Y],
 	)
 
@@ -63,21 +71,10 @@ func collapseVertex(v *Vertex, db *rtree.RTree) bool {
 //find if intersects simple
 func isTriangleCollapsible(a, b, c *geom.Point, neighbours []*rtree.Node) bool {
 	var bln = true
-	var coords = []*geom.Point{a, b, c, a}
-	var triangle = geom.NewPolygon(coords)
-	for _, node := range neighbours {
-		n := node.GetItem().(*ctx.ContextGeometry)
-		if triangle.Intersects(n.Geom) {
-			//[a,b,c,a]->[0,1,2,3]
-			ab := geom.NewLineString(coords[0:2]) //[a,b]->[0,1]
-			bc := geom.NewLineString(coords[1:3]) //[b,c]->[1,2]
-			ac := geom.NewLineString(coords[2:4]) //[c,a]->[2,3]
-
-			bln = (ab.Intersects(n.Geom) || bc.Intersects(n.Geom)) && ac.Intersects(n.Geom)
-			if !bln {
-				break
-			}
-		}
+	var triangle = geom.NewPolygon([]*geom.Point{a, b, c, a})
+	for i, n := 0, len(neighbours); bln && i < n; i++ {
+		c := neighbours[i].GetItem().(*ctx.ContextGeometry)
+		bln = !triangle.Intersects(c.Geom) //disjoint
 	}
 	return bln
 }
