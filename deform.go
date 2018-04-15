@@ -4,17 +4,18 @@ import (
 	"simplex/ctx"
 	"github.com/intdxdt/geom"
 	"github.com/intdxdt/rtree"
+	"fmt"
 )
 
-//func printChain(chain *Chain) {
-//	var coords []*geom.Point
-//	var link = chain.link
-//	for link != nil {
-//		coords = append(coords, link.Point)
-//		link = link.next
-//	}
-//	fmt.Println(geom.NewLineString(coords).WKT())
-//}
+func printChain(chain *Chain) {
+	var coords []*geom.Point
+	var link = chain.link
+	for link != nil {
+		coords = append(coords, link.Point)
+		link = link.next
+	}
+	fmt.Println(geom.NewLineString(coords).WKT())
+}
 
 //deforms a polyline given coordinates and disjoint context neighbours
 func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries) *Chain {
@@ -25,7 +26,6 @@ func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries
 	for deformable && chain.size > 2 {
 		deformable = false
 		var link = chain.link
-
 		for link != nil {
 			if collapseVertex(link, db) {
 				remove(link)
@@ -34,6 +34,7 @@ func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries
 			}
 			link = link.next
 		}
+		//printChain(chain)
 	}
 	return chain
 }
@@ -60,7 +61,6 @@ func collapseVertex(v *Vertex, db *rtree.RTree) bool {
 	var box = a.BBox().ExpandIncludeXY(b[geom.X], b[geom.Y], ).ExpandIncludeXY(
 		c[geom.X], c[geom.Y],
 	)
-
 	var neighbours = db.Search(box)
 	if len(neighbours) > 0 {
 		bln = isTriangleCollapsible(a, b, c, neighbours)
