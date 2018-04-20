@@ -15,7 +15,25 @@ func main() {
 	//homo_eg0_deformation()
 	//homo_eg1_undeform()
 	//homo_eg2_undeform()
-	homo_eg3_undeform()
+	//homo_eg3_undeform()
+	paper3_homo()
+}
+
+func paper3_homo() {
+	var wkt = "LINESTRING ( 890.9491141595076 651.5625534172342, 879.8932299895838 663.6707515220128, 885.1153871664693 681.3721679747404, 896.1398134707376 691.2561363854637, 921.9406424000867 689.8821277442557, 928.3526827257239 682.2487464042116, 931.4060352617415 671.8673477817516, 917.0552783424586 661.1806139056898, 903.46785955718 662.249287293296, 900 675, 901.6358480355694 684.0807579258222, 922.2459776536886 698.4315148451052, 943.75 687.5, 943.75 662.5 )"
+	var cwkt = []string{
+		"POLYGON (( 912.6279171652329 683.9280902990213, 909.7272322560161 671.8673477817516, 920.8719690124806 674.004694556964, 912.6279171652329 683.9280902990213 ))",
+	}
+
+	var contexts = ctx.NewContexts()
+	for _, o := range cwkt {
+		contexts.Push(ctx.New(geom.ReadGeometry(o), 0, -1))
+	}
+	var coords = loads(wkt)
+	var p = geom.NewPolygon(coords)
+	fmt.Println(p.WKT())
+	var bln = homotopy.Homotopy(coords, contexts)
+	fmt.Println(bln)
 }
 
 func homo_eg3_undeform() {
