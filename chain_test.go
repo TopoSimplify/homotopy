@@ -4,7 +4,7 @@ import (
 	"time"
 	"testing"
 	"github.com/franela/goblin"
-	"simplex/ctx"
+	"github.com/TopoSimplify/ctx"
 	"github.com/intdxdt/geom"
 )
 

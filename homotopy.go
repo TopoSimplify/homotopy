@@ -1,7 +1,7 @@
 package homotopy
 
 import (
-	"simplex/ctx"
+	"github.com/TopoSimplify/ctx"
 	"github.com/intdxdt/geom"
 )
 

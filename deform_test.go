@@ -3,7 +3,7 @@ package homotopy
 import (
 	"time"
 	"testing"
-	"simplex/ctx"
+	"github.com/TopoSimplify/ctx"
 	"github.com/intdxdt/geom"
 	"github.com/franela/goblin"
 )

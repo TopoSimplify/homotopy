@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/intdxdt/geom"
-	"simplex/ctx"
-	"simplex/homotopy"
+	"github.com/TopoSimplify/ctx"
+	"github.com/TopoSimplify/homotopy"
 	"fmt"
 )
 
