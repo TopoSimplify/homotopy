@@ -4,7 +4,17 @@ import (
 	"github.com/TopoSimplify/ctx"
 	"github.com/intdxdt/geom"
 	"github.com/intdxdt/rtree"
+	"fmt"
 )
+func printChain(chain *Chain) {
+	var coords []*geom.Point
+	var link = chain.link
+	for link != nil {
+		coords = append(coords, link.Point)
+		link = link.next
+	}
+	fmt.Println(geom.NewLineString(coords).WKT())
+}
 
 //deforms a polyline given coordinates and disjoint context neighbours
 func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries) *Chain {
@@ -23,6 +33,7 @@ func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries
 			}
 			link = link.next
 		}
+		//printChain(chain)
 	}
 	return chain
 }

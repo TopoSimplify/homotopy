@@ -16,7 +16,26 @@ func main() {
 	//homo_eg1_undeform()
 	//homo_eg2_undeform()
 	//homo_eg3_undeform()
-	paper3_homo()
+	//paper3_homo()
+	chp1_litreview_homo()
+}
+
+func chp1_litreview_homo() {
+	var wkt = "Linestring(-6 2, -6 4, -4 4, -4 -1, 4 -1, 4 4, 1 4, 1 0, -2 0, -2 5, 6 5, 6 2)"
+	var cwkt = []string {
+		"POINT ( -1.07065 1.1577 )",
+		"POINT ( 1.97068  3.1577 )",
+	}
+
+	var contexts = ctx.NewContexts()
+	for _, o := range cwkt {
+		contexts.Push(ctx.New(geom.ReadGeometry(o), 0, -1))
+	}
+	var coords = loads(wkt)
+	var p = geom.NewPolygon(coords)
+	fmt.Println(p.WKT())
+	var bln = homotopy.Homotopy(coords, contexts)
+	fmt.Println(bln)
 }
 
 func paper3_homo() {
