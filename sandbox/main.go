@@ -1,13 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/intdxdt/geom"
 	"github.com/TopoSimplify/ctx"
 	"github.com/TopoSimplify/homotopy"
-	"fmt"
 )
 
-func loads(wkt string) []*geom.Point {
+func loads(wkt string) []geom.Point {
 	return geom.NewLineStringFromWKT(wkt).Coordinates()
 }
 

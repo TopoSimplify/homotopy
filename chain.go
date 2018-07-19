@@ -17,19 +17,19 @@ type Chain struct {
 	simple *geom.LineString
 }
 
-func NewChain(coordinates []*geom.Point) *Chain {
+func NewChain(coordinates []geom.Point) *Chain {
 	var n = len(coordinates)
 	var chain = &Chain{
 		size: n,
-		link: &Vertex{Point: coordinates[0]},
-		simple: geom.NewLineString([]*geom.Point{
+		link: &Vertex{Point: &coordinates[0]},
+		simple: geom.NewLineString([]geom.Point{
 			coordinates[0], coordinates[n-1],
 		}),
 	}
 	var prev, next *Vertex
 	prev = chain.link
 	for i := 1; i < chain.size; i++ {
-		next = &Vertex{Point: coordinates[i], i: i, prev: prev}
+		next = &Vertex{Point: &coordinates[i], i: i, prev: prev}
 		ptrs(prev, next)
 		prev = next
 	}

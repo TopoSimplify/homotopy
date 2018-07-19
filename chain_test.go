@@ -8,7 +8,7 @@ import (
 	"github.com/intdxdt/geom"
 )
 
-func reverse(coordinates []*geom.Point) []*geom.Point {
+func reverse(coordinates []geom.Point) []geom.Point {
 	for i, j := 0, len(coordinates)-1; i < j; i, j = i+1, j-1 {
 		coordinates[i], coordinates[j] = coordinates[j], coordinates[i]
 	}

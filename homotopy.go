@@ -6,7 +6,7 @@ import (
 )
 
 //Homotopy Relate
-func Homotopy(coordinates []*geom.Point, contexts *ctx.ContextGeometries) bool {
+func Homotopy(coordinates []geom.Point, contexts *ctx.ContextGeometries) bool {
 	var bln bool
 	var disjoint, _, xor = filterContext(coordinates, contexts)
 	if xor.Len() > 0 {
@@ -26,11 +26,11 @@ func Homotopy(coordinates []*geom.Point, contexts *ctx.ContextGeometries) bool {
 	return bln
 }
 
-func filterContext(coordinates []*geom.Point, contexts *ctx.ContextGeometries) (
+func filterContext(coordinates []geom.Point, contexts *ctx.ContextGeometries) (
 	*ctx.ContextGeometries, *ctx.ContextGeometries, *ctx.ContextGeometries,
 ) {
 	var n = len(coordinates)
-	var simple = geom.NewLineString([]*geom.Point{
+	var simple = geom.NewLineString([]geom.Point{
 		coordinates[0], coordinates[n-1],
 	})
 	var ln = geom.NewLineString(coordinates)

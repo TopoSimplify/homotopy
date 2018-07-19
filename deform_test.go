@@ -8,7 +8,7 @@ import (
 	"github.com/franela/goblin"
 )
 
-func loads(wkt string) []*geom.Point {
+func loads(wkt string) []geom.Point {
 	return geom.NewLineStringFromWKT(wkt).Coordinates()
 }
 
@@ -346,14 +346,14 @@ func TestHomotopyDeformationCmplx(t *testing.T) {
 				Homotopy(coords, cgs),
 			).IsTrue()
 
-			coords = []*geom.Point{{2, 2}, {5, 2}, {7, 2}, {9, 2}}
-			var lnconst = geom.NewLineString([]*geom.Point{{3, 2}, {6, 2}, {6.5, 2}})
+			coords = []geom.Point{{2, 2}, {5, 2}, {7, 2}, {9, 2}}
+			var lnconst = geom.NewLineString([]geom.Point{{3, 2}, {6, 2}, {6.5, 2}})
 			cgs = ctx.New(lnconst, -1, 0).AsContextGeometries()
 			g.Assert(
 				Homotopy(coords, cgs),
 			).IsTrue()
 
-			var plyconst = geom.NewPolygon([]*geom.Point{{4, 1}, {4, 3}, {5, 3}, {5, 1}})
+			var plyconst = geom.NewPolygon([]geom.Point{{4, 1}, {4, 3}, {5, 3}, {5, 1}})
 			cgs = ctx.New(plyconst, -1, 0).AsContextGeometries()
 			g.Assert(
 				Homotopy(coords, cgs),

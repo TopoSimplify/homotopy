@@ -1,23 +1,24 @@
 package homotopy
 
 import (
-	"github.com/TopoSimplify/ctx"
+	"fmt"
 	"github.com/intdxdt/geom"
 	"github.com/intdxdt/rtree"
-	"fmt"
+	"github.com/TopoSimplify/ctx"
 )
+
 func printChain(chain *Chain) {
-	var coords []*geom.Point
+	var coords []geom.Point
 	var link = chain.link
 	for link != nil {
-		coords = append(coords, link.Point)
+		coords = append(coords, *link.Point)
 		link = link.next
 	}
 	fmt.Println(geom.NewLineString(coords).WKT())
 }
 
 //deforms a polyline given coordinates and disjoint context neighbours
-func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries) *Chain {
+func chainDeformation(coordinates []geom.Point, contexts *ctx.ContextGeometries) *Chain {
 	var db = contextDB(contexts)
 	var chain = NewChain(coordinates)
 	var deformable = true
@@ -39,10 +40,11 @@ func chainDeformation(coordinates []*geom.Point, contexts *ctx.ContextGeometries
 }
 
 func contextDB(contexts *ctx.ContextGeometries) *rtree.RTree {
-	var db = rtree.NewRTree(4)
-	var objects = make([]rtree.BoxObj, 0)
-	for _, o := range contexts.DataView() {
-		objects = append(objects, o)
+	var db = rtree.NewRTree()
+	var view = contexts.DataView()
+	var objects = make([]*rtree.Obj, 0, len(view))
+	for i := range view {
+		objects = append(objects, rtree.Object(i, view[i].BBox(), view[i]))
 	}
 	db.Load(objects)
 	return db
@@ -68,11 +70,11 @@ func collapseVertex(v *Vertex, db *rtree.RTree) bool {
 }
 
 //find if intersects simple
-func isTriangleCollapsible(a, b, c *geom.Point, neighbours []*rtree.Node) bool {
+func isTriangleCollapsible(a, b, c *geom.Point, neighbours []*rtree.Obj) bool {
 	var bln = true
-	var triangle = geom.NewPolygon([]*geom.Point{a, b, c, a})
+	var triangle = geom.NewPolygon([]geom.Point{*a, *b, *c, *a})
 	for i, n := 0, len(neighbours); bln && i < n; i++ {
-		c := neighbours[i].GetItem().(*ctx.ContextGeometry)
+		c := neighbours[i].Object.(*ctx.ContextGeometry)
 		bln = !triangle.Intersects(c.Geom) //disjoint
 	}
 	return bln
