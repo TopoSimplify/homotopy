@@ -17,8 +17,12 @@ func printChain(chain *Chain) {
 	fmt.Println(geom.NewLineString(coords).WKT())
 }
 
-//deforms a polyline given coordinates and disjoint context neighbours
-func chainDeformation(coordinates []geom.Point, contexts *ctx.ContextGeometries) *Chain {
+//deforms a polyline given coordinates and
+// disjoint context neighbours
+func chainDeformation(
+	coordinates []geom.Point,
+	contexts *ctx.ContextGeometries) *Chain {
+
 	var db = contextDB(contexts)
 	var chain = NewChain(coordinates)
 	var deformable = true
