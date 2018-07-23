@@ -48,7 +48,7 @@ func contextDB(contexts *ctx.ContextGeometries) *rtree.RTree {
 	var view = contexts.DataView()
 	var objects = make([]*rtree.Obj, 0, len(view))
 	for i := range view {
-		objects = append(objects, rtree.Object(i, view[i].BBox(), view[i]))
+		objects = append(objects, rtree.Object(i, view[i].Bounds(), view[i]))
 	}
 	db.Load(objects)
 	return db
@@ -66,7 +66,7 @@ func collapseVertex(v *Vertex, db *rtree.RTree) bool {
 	var box = a.BBox().ExpandIncludeXY(b[geom.X], b[geom.Y], ).ExpandIncludeXY(
 		c[geom.X], c[geom.Y],
 	)
-	var neighbours = db.Search(box)
+	var neighbours = db.Search(*box)
 	if len(neighbours) > 0 {
 		bln = isTriangleCollapsible(a, b, c, neighbours)
 	}
