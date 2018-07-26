@@ -1,21 +1,20 @@
 package homotopy
 
 import (
-	"fmt"
 	"github.com/intdxdt/geom"
 	"github.com/intdxdt/rtree"
 	"github.com/TopoSimplify/ctx"
 )
 
-func printChain(chain *Chain) {
-	var coords []geom.Point
-	var link = chain.link
-	for link != nil {
-		coords = append(coords, *link.Point)
-		link = link.next
-	}
-	fmt.Println(geom.NewLineString(coords).WKT())
-}
+//func printChain(chain *Chain) {
+//	var coords []geom.Point
+//	var link = chain.link
+//	for link != nil {
+//		coords = append(coords, *link.Point)
+//		link = link.next
+//	}
+//	fmt.Println(geom.NewLineString(coords).WKT())
+//}
 
 //deforms a polyline given coordinates and
 // disjoint context neighbours
