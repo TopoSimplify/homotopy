@@ -6,7 +6,7 @@ import (
 )
 
 //Homotopy Relate
-func Homotopy(coordinates []geom.Point, contexts *ctx.ContextGeometries) bool {
+func Homotopy(coordinates geom.Coords, contexts *ctx.ContextGeometries) bool {
 	var bln bool
 	var disjoint, _, xor = filterContext(coordinates, contexts)
 	if xor.Len() > 0 {
@@ -18,21 +18,21 @@ func Homotopy(coordinates []geom.Point, contexts *ctx.ContextGeometries) bool {
 	}
 
 	var ch = chainDeformation(coordinates, disjoint)
-	var n = len(coordinates) - 1
+	var n = coordinates.Len() - 1
 	if ch.size == 2 {
 		var a, b = ch.link.Point, ch.link.next.Point
-		bln = coordinates[0].Equals2D(a) && coordinates[n].Equals2D(b)
+		bln = coordinates.Pt(0).Equals2D(a) && coordinates.Pt(n).Equals2D(b)
 	}
 	return bln
 }
 
-func filterContext(coordinates []geom.Point, contexts *ctx.ContextGeometries) (
+func filterContext(coordinates geom.Coords, contexts *ctx.ContextGeometries) (
 	*ctx.ContextGeometries, *ctx.ContextGeometries, *ctx.ContextGeometries,
 ) {
-	var n = len(coordinates)
-	var simple = geom.NewLineString([]geom.Point{
-		coordinates[0], coordinates[n-1],
-	})
+	var n = coordinates.Len()
+	var simpleCoords = coordinates
+	simpleCoords.Idxs = []int{0, n-1}
+	var simple = geom.NewLineString(simpleCoords)
 	var ln = geom.NewLineString(coordinates)
 	var exclude = ctx.NewContexts()
 	var disjoint = ctx.NewContexts()

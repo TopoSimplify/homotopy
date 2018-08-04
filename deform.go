@@ -19,7 +19,7 @@ import (
 //deforms a polyline given coordinates and
 // disjoint context neighbours
 func chainDeformation(
-	coordinates []geom.Point,
+	coordinates geom.Coords,
 	contexts *ctx.ContextGeometries) *Chain {
 
 	var db = contextDB(contexts)
@@ -75,7 +75,7 @@ func collapseVertex(v *Vertex, db *rtree.RTree) bool {
 //find if intersects simple
 func isTriangleCollapsible(a, b, c *geom.Point, neighbours []*rtree.Obj) bool {
 	var bln = true
-	var triangle = geom.NewPolygon([]geom.Point{*a, *b, *c, *a})
+	var triangle = geom.NewPolygon(geom.Coordinates([]geom.Point{*a, *b, *c, *a}))
 	for i, n := 0, len(neighbours); bln && i < n; i++ {
 		c := neighbours[i].Object.(*ctx.ContextGeometry)
 		bln = !triangle.Intersects(c.Geom) //disjoint

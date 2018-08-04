@@ -8,9 +8,9 @@ import (
 	"github.com/intdxdt/geom"
 )
 
-func reverse(coordinates []geom.Point) []geom.Point {
-	for i, j := 0, len(coordinates)-1; i < j; i, j = i+1, j-1 {
-		coordinates[i], coordinates[j] = coordinates[j], coordinates[i]
+func reverse(coordinates geom.Coords) geom.Coords {
+	for i, j := 0, len(coordinates.Idxs)-1; i < j; i, j = i+1, j-1 {
+		coordinates.Idxs[i], coordinates.Idxs[j] = coordinates.Idxs[j], coordinates.Idxs[i]
 	}
 	return coordinates
 }
@@ -33,7 +33,7 @@ func TestChain(t *testing.T) {
 			var coords = loads(wkt)
 			var ch = NewChain(coords)
 
-			g.Assert(ch.size).Equal(len(coords))
+			g.Assert(ch.size).Equal(coords.Len())
 
 			var link = ch.link
 			var indices, expect []int
@@ -43,7 +43,7 @@ func TestChain(t *testing.T) {
 				link = link.next
 			}
 
-			for i := 0; i < len(coords); i++ {
+			for i := 0; i < coords.Len(); i++ {
 				expect = append(expect, i)
 			}
 
