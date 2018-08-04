@@ -14,18 +14,17 @@ type Vertex struct {
 type Chain struct {
 	link *Vertex
 	size int
-	simple *geom.LineString
+	simple *geom.Segment
 }
 
 func NewChain(coordinates geom.Coords) *Chain {
 	var n = coordinates.Len()
-	var simpleCoords = coordinates
-	simpleCoords.Idxs = []int{0, n-1}
 	var chain = &Chain{
 		size: n,
 		link: &Vertex{Point: coordinates.Pt(0)},
-		simple: geom.NewLineString(simpleCoords),
+		simple: geom.NewSegment(coordinates, 0, n-1),
 	}
+
 	var prev, next *Vertex
 	prev = chain.link
 	for i := 1; i < chain.size; i++ {

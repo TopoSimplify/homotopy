@@ -30,9 +30,7 @@ func filterContext(coordinates geom.Coords, contexts *ctx.ContextGeometries) (
 	*ctx.ContextGeometries, *ctx.ContextGeometries, *ctx.ContextGeometries,
 ) {
 	var n = coordinates.Len()
-	var simpleCoords = coordinates
-	simpleCoords.Idxs = []int{0, n-1}
-	var simple = geom.NewLineString(simpleCoords)
+	var simple = geom.NewSegment(coordinates, 0, n-1)
 	var ln = geom.NewLineString(coordinates)
 	var exclude = ctx.NewContexts()
 	var disjoint = ctx.NewContexts()
