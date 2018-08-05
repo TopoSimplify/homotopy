@@ -26,26 +26,27 @@ func Homotopy(coordinates geom.Coords, contexts *ctx.ContextGeometries) bool {
 	return bln
 }
 
-func filterContext(coordinates geom.Coords, contexts *ctx.ContextGeometries) (
-	*ctx.ContextGeometries, *ctx.ContextGeometries, *ctx.ContextGeometries,
-) {
+func filterContext(coordinates geom.Coords, contexts *ctx.ContextGeometries)(
+	*ctx.ContextGeometries, *ctx.ContextGeometries, *ctx.ContextGeometries){
 	var n = coordinates.Len()
 	var simple = geom.NewSegment(coordinates, 0, n-1)
 	var ln = geom.NewLineString(coordinates)
 	var exclude = ctx.NewContexts()
 	var disjoint = ctx.NewContexts()
 	var xor = ctx.NewContexts()
+	var lnBln, simpleBln bool
 
 	for _, c := range contexts.DataView() {
-		ln_bln := ln.Intersects(c.Geom)
-		simple_bln := simple.Intersects(c.Geom)
-		if ln_bln && simple_bln {
+		lnBln = ln.Intersects(c.Geom)
+		simpleBln = simple.Intersects(c.Geom)
+		if lnBln && simpleBln {
 			exclude.Push(c)
-		} else if !ln_bln && !simple_bln {
+		} else if !lnBln && !simpleBln {
 			disjoint.Push(c)
 		} else {
 			xor.Push(c)
 		}
 	}
+
 	return disjoint, exclude, xor
 }
