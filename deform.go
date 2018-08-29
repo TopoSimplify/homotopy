@@ -45,9 +45,9 @@ func chainDeformation(
 func contextDB(contexts *ctx.ContextGeometries) *rtree.RTree {
 	var db = rtree.NewRTree()
 	var view = contexts.DataView()
-	var objects = make([]*rtree.Obj, 0, len(view))
+	var objects = make([]rtree.BoxObject, 0, len(view))
 	for i := range view {
-		objects = append(objects, rtree.Object(i, view[i].Bounds(), view[i]))
+		objects = append(objects, view[i])
 	}
 	db.Load(objects)
 	return db
@@ -73,11 +73,11 @@ func collapseVertex(v *Vertex, db *rtree.RTree) bool {
 }
 
 //find if intersects simple
-func isTriangleCollapsible(a, b, c *geom.Point, neighbours []*rtree.Obj) bool {
+func isTriangleCollapsible(a, b, c *geom.Point, neighbours []rtree.BoxObject) bool {
 	var bln = true
 	var triangle = geom.NewPolygon(geom.Coordinates([]geom.Point{*a, *b, *c, *a}))
 	for i, n := 0, len(neighbours); bln && i < n; i++ {
-		c := neighbours[i].Object.(*ctx.ContextGeometry)
+		c := neighbours[i].(*ctx.ContextGeometry)
 		bln = !triangle.Intersects(c.Geom) //disjoint
 	}
 	return bln
